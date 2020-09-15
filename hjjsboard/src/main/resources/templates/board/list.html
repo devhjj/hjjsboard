@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="board/layout/basic">
+	<th:block layout:fragment="title">
+		<title>HJJ's Board</title>
+	</th:block>
+	
+	<th:block layout:fragment="search">
+		
+	</th:block>
+
+	<th:block layout:fragment="content">
+		<div id="fh5co-blog-section" class="fh5co-section-gray">
+			<div class="container">
+				<div class="row" style="display:flex">
+					<div class="col-lg-4 col-md-6" th:if="${not #lists.isEmpty( boardList )}" th:each="row : ${boardList}">
+						<div class="fh5co-blog animate-box">
+							<a th:href="|@{/board/view.do}${params.makeQueryString(params.currentPageNo)}&seq=${row.seq}|">
+								<img class="img-responsive" th:if="${row.img_file != null}" th:src="|/img/board/${row.img_file}|" alt="">
+								<img class="img-responsive" th:unless="${row.img_file != null}" src="/img/board/no_img.jpg" alt="">
+							</a>
+							<div class="image-popup" th:href="|@{/board/view.do}${params.makeQueryString(params.currentPageNo)}&seq=${row.seq}|">
+								<div class="prod-title">
+									<h3><a th:href="|@{/board/view.do}${params.makeQueryString(params.currentPageNo)}&seq=${row.seq}|" th:text="${row.title}"></a></h3>
+									<span class="comment"><a th:href="|@{/board/view.do}${params.makeQueryString(params.currentPageNo)}&seq=${row.seq}|" th:text="${row.comment_cnt}"> </a><i class="far fa-comment" style="color: #FCC72C;padding-left: 7px;"></i></span>
+								</div>
+							</div> 
+						</div>
+					</div>
+					
+					<div th:unless="${not #lists.isEmpty( boardList )}">
+						<div class="fh5co-blog animate-box">게시물이 존재하지 않습니다.</div>
+					</div>
+				</div>
+				<th:block layout:fragment="paging">
+					<nav th:replace="board/fragments/common :: pagination"></nav>
+				</th:block>
+		
+				<div class="clearfix">
+					<div>
+						<span>Today</span>
+						<span th:text="${todayView}" style="color:skyblue"></span>
+						<span>Total</span>
+						<span th:text="${totalView}" style="font-weight:bold"></span>
+					</div>
+					<a th:href="@{/board/write.do}" class="btn btn-primary waves-effect waves-light float-right">Write</a>
+				</div>
+			</div>
+		</div>
+	</th:block>
+	
+	<th:block layout:fragment="script">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+
+			function movePage(uri, queryString) {
+				location.href = uri + queryString;
+			}
+			
+			function searchBoard(form) {
+				/*[- 드롭다운이 아닌 메인 검색 키워드로 검색했을 때 -]*/
+				if (isEmpty(form) == true) {
+					var searchKeyword = document.getElementById("mainSearchKeyword");
+					if (isEmpty(searchKeyword.value) == true) {
+						alert("키워드를 입력해 주세요.");
+						searchKeyword.focus();
+						return false;
+					}
+
+					form = document.getElementById("searchForm");
+					form.searchKeyword.value = searchKeyword.value;
+					form.submit();
+				}
+
+				if (isEmpty(form.searchKeyword.value) == true) {
+					alert("키워드를 입력해 주세요.");
+					form.searchKeyword.focus();
+					return false;
+				}
+			}
+			/*[- end of function -]*/
+			
+			/*]]>*/
+		</script>
+	</th:block>
+	
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="board/layout/basic">
+	<th:block layout:fragment="title">
+		<title th:text="*{board.title}"></title>
+	</th:block>
+
+	<th:block layout:fragment="modal">
+		<div id="commentModal" class="modal fade.in" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+		    <div class="modal-dialog" role="document">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                <span aria-hidden="true">&times;</span>
+		                </button>
+		            </div>
+		            <div class="modal-body">
+		                <form>
+		                    <div class="form-group">
+		                        <label for="modalWriter" class="col-form-label">작성자</label>
+		                        <input type="text" id="modalWriter" class="form-control" placeholder="작성자를 입력해 주세요." />
+		                    </div>
+		                    <div class="form-group">
+		                        <label for="modalContent" class="col-form-label">내용</label>
+		                        <textarea id="modalContent" class="form-control" placeholder="내용을 입력해 주세요."></textarea>
+		                    </div>
+		                </form>
+		            </div>
+		            <div class="modal-footer">
+		                <button type="button" id="btnModalCancel" class="btn btn-light waves-effect waves-light" data-dismiss="modal">Back</button>
+		                <button type="button" id="btnCommentUpdate" class="btn btn-primary waves-effect waves-light" onclick="updateComment()">수정하기</button>
+		                <button type="button" id="btnCommentDelete" class="btn btn-danger waves-effect waves-light" onclick="updateComment()">삭제하기</button>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</th:block>
+
+	<th:block layout:fragment="content">
+	<hr class="divider my-3">
+	<a  th:href="|@{/board/view.do}${params.makeQueryString(params.currentPageNo)}&seq=*{board.seq+1}|" class="fh5co-post-prev"><span><i class="fas fa-angle-double-left"></i>Next </span></a>
+	<a th:if="*{board.seq-1} > 0" th:href="|@{/board/view.do}${params.makeQueryString(params.currentPageNo)}&seq=*{board.seq-1}|" class="fh5co-post-next"><span>Prev <i class="fas fa-angle-double-right"></i></span></a>
+	
+	<div class="container-fluid">
+		<div class="row fh5co-post-entry single-entry">
+		<article class="col-lg-10 col-md-10 col-sm-10">
+			<form class="form-horizontal form-view" th:object="${board}">
+				<section>
+		            <div class="form-group">
+					
+					<div class="col-sm-12">
+						<p class="title-control" th:text="*{title}" style="font-weight:bold"></p>
+					</div>
+					<span style="color: lightgray;float:left" th:text="*{#temporals.format(reg_date,'yy-MM-dd HH:mm')}"></span>
+					<span style="font-style: italic;color: lightgray;float:center">&nbsp;posted by. 김영훈</span>
+					<span style="color: lightgray;float:right" th:text="|조회수: *{view_cnt}|"></span>
+		            </div>
+		        </section>
+				
+				<div class="form-group">
+					<div>
+						<pre id="main_content" style="text-align: left;white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap;  white-space: pre-wrap; word-wrap: break-word;width:100%;border: none;">[[*{content}]]</pre>
+					</div>
+					<figure class="animate-box fadeInUp animated">
+						<img class="img-responsive" th:if="*{img_file != null}" th:src="|/img/board/*{img_file}|" alt="">
+						<img class="img-responsive" th:unless="*{img_file != null}" src="/img/loading.gif" alt="">
+					</figure>
+				</div>
+
+			</form>
+
+			<div class="btn_wrap text-center" th:object="${params}">
+				<a th:href="|@{/board/list.do}*{makeQueryString(currentPageNo)}|" class="btn btn-light waves-effect waves-light">목록</a>
+				<a th:href="|@{/board/write.do}*{makeQueryString(currentPageNo)}&seq=${board.seq}|" class="btn btn-primary waves-effect waves-light">수정하기</a>
+				<button type="button" class="btn btn-danger waves-effect waves-light" th:onclick="deleteBoard([[ ${board.seq} ]], [[ *{makeQueryString(currentPageNo)} ]])">삭제하기</button>
+			</div>
+			</article>
+		</div>
+		<!-- /.card-content -->
+		
+		<th:block layout:fragment="add-content">
+		<div class="container-fluid" style="margin-top:20px">
+			<div class="card-content">
+				<div class="clearfix">
+					<h4 style="color:white">Comment</h4>
+					<!-- /.box-title -->
+				</div>
+
+				<form class="form-horizontal form-view">
+					<div class="input-group margin-bottom-20" style="margin-left: 15px;">
+						<input type="text" id="content" class="form-control" />
+						<div class="input-group-btn">
+							<button type="button" class="btn waves-effect waves-light" th:onclick="insertComment([[ ${board.seq} ]])">
+							<i class="fas fa-comment-dots fa-2x text-primary mb-2" aria-hidden="true"></i>
+							</button>
+						</div>
+						<!-- /.input-group-btn -->
+					</div>
+					<ul class="notice-list"></ul>
+				</form>
+			</div>
+			<!-- /.card-content -->
+		</div>
+		<!-- /.box-content -->
+	</th:block>
+	</div>
+	</th:block>
+
+	
+	
+	<th:block layout:fragment="script">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			function updateComment(seq, status) {
+
+				var writer = document.getElementById("modalWriter");
+				var content = document.getElementById("modalContent");
+			
+				var uri = [[ @{/comments/} ]] + seq;
+				var headers = {"Content-Type": "application/json", "X-HTTP-Method-Override": "PATCH"};
+				var params = {"seq": seq, "writer": writer.value, "content": content.value, "status": status};
+			
+				$.ajax({
+					url: uri,
+					type: "PATCH",
+					headers: headers,
+					dataType: "json",
+					data: JSON.stringify(params),
+					success: function(response) {
+						if (response.result == false) {
+							alert("댓글 수정에 실패하였습니다.");
+							return false;
+						}
+			
+						printCommentList();
+						$("#commentModal").modal("hide");
+					},
+					error: function(xhr, status, error) {
+						alert("에러가 발생하였습니다.");
+						return false;
+					}
+				});
+			}
+				
+			function openModal(seq, writer, content) {
+
+				$("#commentModal").modal("toggle");
+		
+				document.getElementById("modalWriter").value = writer;
+				document.getElementById("modalContent").value = content;
+		
+				document.getElementById("btnCommentUpdate").setAttribute("onclick", "updateComment("+ seq + ",'R')");
+				document.getElementById("btnCommentDelete").setAttribute("onclick", "updateComment("+ seq + ",'D')");
+			}	
+				
+			function insertComment(boardSeq) {
+				var clientIP = /*[[ ${clientIP} ]]*/;	// view.do 실행시 넘긴 값
+				var content = document.getElementById("content");
+				if (isEmpty(content.value) == true) {
+					content.setAttribute("placeholder", "댓글을 입력해 주세요.");
+					content.focus();
+					return false;
+				}
+			
+				var uri = /*[[ @{/comments} ]]*/;
+				var headers = {"Content-Type": "application/json", "X-HTTP-Method-Override": "POST"};
+				var params = {"boardSeq": boardSeq, "content": content.value, "writer": clientIP};
+			
+				$.ajax({
+					url: uri,
+					type: "POST",
+					headers: headers,
+					dataType: "json",
+					data: JSON.stringify(params),
+					success: function(response) {
+						if (response.result == false) {
+							alert("댓글 등록에 실패하였습니다.");
+							return false;
+						}
+			
+						printCommentList();
+						content.value = "";
+					},
+					error: function(xhr, status, error) {
+						alert("에러가 발생하였습니다.");
+						return false;
+					}
+				});
+			}
+				
+			$(function() {
+				printCommentList();
+			});
+
+			function printCommentList() {
+
+				var uri = /*[[ @{/comments/} + ${board.seq} ]]*/;
+				var clientIP = /*[[ ${clientIP} ]]*/;	// view.do 실행시 넘긴 값
+				$.get(uri, function(response) {
+					if (isEmpty(response) == false) {
+						var commentsHtml = "";
+
+						$(response.commentList).each(function(seq, comment) {
+							commentsHtml += `
+								<li>
+									<span class="name">${comment.writer.substring(comment.writer,4)}*</span>
+									<pre class="desc" style="text-align: left;white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap;  white-space: pre-wrap; word-wrap: break-word;width:100%;border: none;color:grey;">${comment.content}</pre>
+									<span class="time">${moment(comment.reg_date).format('YY-MM-DD HH:mm')}</span>
+									`;
+									if (comment.writer == clientIP) {
+										commentsHtml += `
+										<button type="button" onclick="openModal(${comment.seq}, '${comment.writer}', '${comment.content}' )" class="btn btn-xs btn-circle"><i class="fas fa-pencil-alt text-primary mb-2" aria-hidden="true"></i></button>
+										</li>
+										`;
+									}else{
+										commentsHtml += `
+										</li>
+										`;
+									}
+						});
+
+						$(".notice-list").html(commentsHtml);
+					}
+				}, "json");
+			}
+			/*[- end of function -]*/
+
+			function deleteBoard(seq, queryString) {
+
+				if (confirm(seq + "번 게시글을 삭제할까요?")) {
+					var uri = /*[[ @{/board/delete.do} ]]*/;
+					var html = "";
+
+					html += '<form name="dataForm" action="'+uri+'" method="post">';
+					html += '<input type="hidden" name="seq" value="'+seq+'" />';
+					
+					/*[- 쿼리 스트링을 오브젝트 형태로 변환 -]*/
+					queryString = new URLSearchParams(queryString);
+					queryString.forEach(function(value, key) {
+						if (isEmpty(value) == false) {
+							html += '<input type="hidden" name="' + key + '" value="' + value + '" />';
+						}
+					});
+					
+					html += '</form>';
+
+					$("body").append(html);
+					document.dataForm.submit();
+				}
+			}
+			/*[- end of function -]*/
+			/*resize textarea height*/
+			autosize(document.querySelectorAll('textarea'));
+			
+			$(document).ready(function() {
+
+
+			      autolink('main_content'); 
+
+			});
+			function autolink(id) {
+			    var container = document.getElementById(id);
+			    var doc = container.innerHTML;
+			    var regURL = new RegExp("(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?&=:200-377()]+)","gi");
+			    var regEmail = new RegExp("([xA1-xFEa-z0-9_-]+@[xA1-xFEa-z0-9-]+\.[a-z0-9-]+)","gi");
+			    container.innerHTML = doc.replace(regURL,"<a href='$1://$2' target='_blank'>$1://$2</a>").replace(regEmail,"<a href='mailto:$1'>$1</a>");
+			}
+			/*]]>*/
+		</script>
+	</th:block>
+</html>

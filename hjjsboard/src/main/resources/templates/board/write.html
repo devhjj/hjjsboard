@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="board/layout/basic">
+	<th:block layout:fragment="title">
+		<title>글 작성</title>
+	</th:block>
+
+	<th:block layout:fragment="content">
+		<div class="card-content">
+			<form class="form-horizontal" th:action="@{/board/register.do}" th:object="${board}" method="post" onsubmit="return registerBoard(this)">
+				<!--/* update의 경우 서버로 전달할 게시글 번호 (PK) */-->
+				<input type="hidden" th:if="*{seq != null and seq > 0}" th:field="*{seq}" />
+				<div class="form-group">
+					<label for="categ" class="col-sm-2 control-label">카테고리</label>
+					<select class="col-sm-2" th:field="*{category}" id="category" name="category">
+					    <option value="">선택</option>
+					    <option value="programming">프로그래밍</option>
+					    <option value="dodam">독서모임</option>
+					    <option value="etc">기타</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="title" class="col-sm-2 control-label">제목</label>
+					<div class="col-sm-12">
+						<input type="text" th:field="*{title}" class="form-control" placeholder="제목을 입력해 주세요." />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="content" class="col-sm-2 control-label">내용</label>
+					<div class="col-sm-12">
+						<textarea th:field="*{content}" placeholder="내용을 입력해 주세요."></textarea>
+					</div>
+				</div>
+
+				<div class="btn_wrap text-center" th:object="${params}">
+					<a th:href="|@{/board/list.do}*{makeQueryString(currentPageNo)}|" class="btn btn-light waves-effect waves-light">뒤로가기</a>
+					<button type="submit" class="btn btn-primary waves-effect waves-light">저장하기</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.card-content -->
+	</th:block>
+
+	<th:block layout:fragment="script">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+
+			function registerBoard(form) {
+
+				var result = (
+						   isValid(form.title, "제목", null, null)
+						&& isValid(form.content, "내용", null, null)
+				);
+
+				if ( result == false ) {
+					return false;
+				}
+				
+				var seq = /*[[ ${board.seq} ]]*/;
+				if (isEmpty(seq) == false) {
+					var queryString = /*[[ ${params.makeQueryString(params.currentPageNo)} ]]*/;
+
+					/*[- 쿼리 스트링을 오브젝트 형태로 변환 -]*/
+					queryString = new URLSearchParams(queryString);
+					queryString.forEach(function(value, key) {
+						if (isEmpty(value) == false) {
+							$(form).append('<input type="hidden" name="' + key + '" value="' + value + '" />');
+						}
+					});
+				}
+			}
+			/*[- end of function -]*/
+			/*resize textarea height*/
+			autosize(document.querySelectorAll('textarea'));
+			/*]]>*/
+		</script>
+	</th:block>
+</html>

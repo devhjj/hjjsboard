@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.CommentMapper">
+
+	<insert id="insertComment" parameterType="com.study.domain.CommentDto">
+		/*insertComment*/
+		INSERT INTO hjjcomment (
+			seq
+			, board_seq
+			, content
+			, writer
+			, status
+			, reg_date
+			, mod_date
+		) VALUES (
+			  #{seq}
+			, #{boardSeq}
+			, #{content}
+			, #{writer}
+			, IFNULL(#{status}, 'C')
+			, NOW()
+			, NULL
+		)
+	</insert>
+
+	<select id="selectCommentDetail" parameterType="long" resultType="com.study.domain.CommentDto">
+		<![CDATA[
+		/*selectCommentDetail*/
+		SELECT	seq
+				, board_seq
+				, content
+				, writer
+				, status
+				, reg_date
+				, mod_date
+		FROM	hjjcomment
+		WHERE	status <> 'D'
+		AND		seq = #{seq}
+		]]>
+	</select>
+
+	<update id="updateComment" parameterType="com.study.domain.CommentDto">
+		/*updateComment*/
+		UPDATE hjjcomment
+		SET	mod_date = NOW()
+			, content = #{content}
+			, writer = #{writer}
+		WHERE	seq = #{seq}
+	</update>
+
+	<update id="deleteComment" parameterType="long">
+		/*deleteComment*/
+		UPDATE hjjcomment
+		SET	status = 'D'
+			, mod_date = NOW()
+		WHERE	seq = #{seq}
+	</update>
+
+	<select id="selectCommentList" parameterType="com.study.domain.CommentDto" resultType="com.study.domain.CommentDto">
+		<![CDATA[
+		/*selectCommentList*/
+		SELECT	seq
+				, board_seq
+				, content
+				, writer
+				, status
+				, reg_date
+				, mod_date
+		FROM	hjjcomment
+		WHERE	status <> 'D'
+		AND		board_seq = #{boardSeq}
+		ORDER BY seq DESC, reg_date DESC
+		]]>
+	</select>
+
+	<select id="selectCommentTotalCount" parameterType="com.study.domain.CommentDto" resultType="int">
+		<![CDATA[
+		/*selectCommentTotalCount*/
+		SELECT	COUNT(*)
+		FROM	hjjcomment
+		WHERE	status <> 'D'
+		AND		board_seq = #{boardSeq}
+		]]>
+	</select>
+
+</mapper>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Error page</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="/board_css/creative.min.css"> 
+		<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css}" />
+    </head>
+<body>
+    <a href="/board/list.do"><img th:alt="${msg}" th:src="${src}"></a>
+</body>
+</html>

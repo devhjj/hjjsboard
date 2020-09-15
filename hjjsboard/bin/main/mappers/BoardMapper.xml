@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.BoardMapper">
+	
+	<insert id="insertBoard" parameterType="com.study.domain.BoardDto">
+		/* insertBoard */
+		INSERT INTO hjjboard (
+			title,content,reg_date,status,category
+		) VALUES (
+			  #{title}
+			, #{content}
+			, sysdate()
+			, 'C'
+			, #{category}
+		)
+	</insert>
+
+	<select id="selectBoardDetail" parameterType="long" resultType="com.study.domain.BoardDto">
+		/* selectBoardDetail */
+		SELECT 	title,content,reg_date,mod_date,seq,status,view_cnt,img_file
+		FROM 	hjjboard
+		WHERE	status in ('C', 'R')
+		and		seq = #{seq}
+	</select>
+
+	<update id="updateBoard" parameterType="com.study.domain.BoardDto">
+		<![CDATA[
+		/* updateBoard */
+		UPDATE	hjjboard
+		SET 	title = #{title}
+				, content = #{content}
+				, status = 'R'
+				, mod_date = sysdate()
+		WHERE	seq = #{seq}
+		AND		status <> 'D'
+		]]>
+	</update>
+
+	<update id="deleteBoard" parameterType="long">
+		<![CDATA[
+		/* deleteBoard */
+		UPDATE	hjjboard
+		SET		status = 'D'
+				, mod_date = sysdate()
+		WHERE	seq = #{seq}
+		AND		status <> 'D'
+		]]>
+	</update>
+
+	<select id="selectBoardList" parameterType="com.study.domain.BoardDto" resultType="com.study.domain.BoardDto">	<!-- paging을 위해 BoardDto에 criteria 상속한 CommonDto 상속. -->
+		/* selectBoardList */
+		SELECT	hj.title,hj.content,hj.reg_date,hj.mod_date,hj.seq,hj.view_cnt,hj.img_file
+				, (SELECT count(*) FROM hjjcomment hc WHERE hc.board_seq = hj.seq and hc.status in ('C', 'R')) as comment_cnt
+		FROM	hjjboard hj
+		WHERE	hj.status in ('C', 'R')
+		<if test="category != null and category != ''">
+		AND		hj.category = #{category}
+		</if>
+		<include refid="CommonMapper.search" />
+		ORDER BY seq DESC, reg_date DESC
+		<include refid="CommonMapper.paging" />
+	</select>
+
+	<select id="selectBoardTotalCount" parameterType="com.study.domain.BoardDto" resultType="int">	<!-- paging을 위해 BoardDto에 criteria 상속한 CommonDto 상속. -->
+		/* selectBoardTotalCount */
+		SELECT	COUNT(*)
+		FROM	hjjboard
+		WHERE	status in ('C', 'R')
+		<if test="category != null and category != ''">
+		AND		category = #{category}
+		</if>
+		<include refid="CommonMapper.search" />
+	</select>
+	
+	<update id="updateViewCnt" parameterType="long">
+		/* updateViewCnt */
+		UPDATE	hjjboard
+		SET		view_cnt = view_cnt + 1
+		WHERE	1=1
+		and		seq = #{seq}
+	</update>
+	
+	<insert id="insertIP" parameterType="java.util.Map">
+		/* insertIP */
+		INSERT INTO ip_view_log (
+			ip, reg_date, board_seq
+		) VALUES (
+			  #{ip}
+			, sysdate()
+			, #{seq}
+		)
+	</insert>
+	
+	<update id="updateIP" parameterType="java.util.Map">
+		/* updateIP */
+		UPDATE	ip_view_log
+		SET		reg_date = sysdate()
+		WHERE	ip = #{ip}
+		AND		board_seq = #{seq}
+	</update>
+	
+	<select id="checkIP" parameterType="java.util.Map" resultType="int">
+		<![CDATA[
+		/* checkIP */
+		SELECT	count(*)
+		FROM	ip_view_log
+		WHERE	ip = #{ip}
+		AND		board_seq = #{seq}
+		]]>
+	</select>
+	
+	<select id="todayIP" parameterType="java.util.Map" resultType="int">
+		<![CDATA[
+		/* todayIP */
+		SELECT	count(*)
+		FROM	ip_view_log
+		WHERE	ip = #{ip}
+		AND		board_seq = #{seq}
+		AND		DATE(reg_date) = DATE(NOW())
+		]]>
+	</select>
+	
+	
+	<select id="viewTotal" parameterType="int" resultType="int">
+		<![CDATA[
+		/* viewTotal */
+		SELECT	count(c.ip)
+		FROM	(SELECT ip
+				FROM	ip_view_log
+				GROUP BY ip) c
+		]]>
+	</select>
+	
+	<select id="viewToday" parameterType="int" resultType="int">
+		<![CDATA[
+		/* viewToday */
+		SELECT	count(*)
+		FROM	ip_view_log
+		WHERE	board_seq = #{seq}
+		AND		DATE(reg_date) = DATE(NOW())
+		]]>
+	</select>
+
+</mapper>
