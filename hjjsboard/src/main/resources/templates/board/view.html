@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="board/layout/basic">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{board/layout/basic}">
 	<th:block layout:fragment="title">
 		<title th:text="*{board.title}"></title>
 	</th:block>
@@ -203,7 +203,7 @@
 							commentsHtml += `
 								<li>
 									<span class="name">${comment.writer.substring(comment.writer,4)}*</span>
-									<pre class="desc" style="text-align: left;white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap;  white-space: pre-wrap; word-wrap: break-word;width:100%;border: none;color:grey;">${comment.content}</pre>
+									<pre class="desc" style="text-align: left;white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap;  white-space: pre-wrap; word-wrap: break-word;width:85%;border: none;color:grey;">${comment.content}</pre>
 									<span class="time">${moment(comment.reg_date).format('YY-MM-DD HH:mm')}</span>
 									`;
 									if (comment.writer == clientIP) {

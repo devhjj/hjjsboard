@@ -138,39 +138,4 @@ public class BoardController extends UiUtils {
 		return showMessageWithRedirect("게시글이 삭제되었습니다.", "/board/list.do", Method.GET, pagingParams, model);
 	}
 	
-	@ResponseBody
-	@GetMapping(value = "/log/{seq}")
-	public JsonObject getBoardList2(@PathVariable("seq") Long seq, @ModelAttribute("params") BoardDto params) {
-
-		JsonObject jsonObj = new JsonObject();
-
-		List<BoardDto> list = boardService.getBoardList(params);
-		if (CollectionUtils.isEmpty(list) == false) {
-			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter()).create();
-			JsonArray jsonArr = gson.toJsonTree(list).getAsJsonArray();
-			jsonObj.add("boardList", jsonArr);
-		}
-
-		return jsonObj;
-	}
-	
-	@GetMapping(value = "/log")
-	public String getNewBoardList(@ModelAttribute("params") BoardDto params, Model model) {
-		List<BoardDto> list = boardService.getBoardList(params);
-		model.addAttribute("boardList", list);
-		logger.debug("test"+list.toString());
-		
-		/*리스트의 각 seq 계산*/
-		Map<Integer, Long> map = new HashMap<>();
-		for(int i=0; i<list.size();i++) {
-			map.put(i, list.get(i).getSeq());
-		}
-		model.addAttribute("idx", map);
-		
-		model.addAttribute("todayView",params.getTodayView());
-		model.addAttribute("totalView",params.getTotalView());
-		model.addAttribute("clientIP", clientIp());
-		return "log/main";
-	}
-
 }

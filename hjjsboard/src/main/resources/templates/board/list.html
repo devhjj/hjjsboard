@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="board/layout/basic">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{board/layout/basic}" xmlns:sec="http://www.w3.org/1999/xhtml">
 	<th:block layout:fragment="title">
 		<title>HJJ's Board</title>
 	</th:block>
@@ -42,7 +42,8 @@
 						<span>Total</span>
 						<span th:text="${totalView}" style="font-weight:bold"></span>
 					</div>
-					<a th:href="@{/board/write.do}" class="btn btn-primary waves-effect waves-light float-right">Write</a>
+					<a sec:authorize="hasRole('ADMIN')" th:href="@{/board/write.do}"
+						class="btn btn-primary waves-effect waves-light float-right">Write</a>
 				</div>
 			</div>
 		</div>

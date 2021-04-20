@@ -16,7 +16,6 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		// TODO Auto-generated method stub
-		logger.debug("===============================================");
 		logger.debug("==================== BEGIN ====================");
 		logger.debug("Request URI ===> " + request.getRequestURI());
 		return super.preHandle(request, response, handler);
@@ -28,7 +27,6 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 			ModelAndView modelAndView) throws Exception {
 		// TODO Auto-generated method stub
 		logger.debug("==================== END ======================");
-		logger.debug("===============================================");
 	}
 	
 	

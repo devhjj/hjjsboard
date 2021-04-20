@@ -49,7 +49,7 @@
 
 	<select id="selectBoardList" parameterType="com.study.domain.BoardDto" resultType="com.study.domain.BoardDto">	<!-- paging을 위해 BoardDto에 criteria 상속한 CommonDto 상속. -->
 		/* selectBoardList */
-		SELECT	hj.title,hj.content,hj.reg_date,hj.mod_date,hj.seq,hj.view_cnt,hj.img_file
+		SELECT	hj.title,hj.reg_date,hj.seq,hj.img_file
 				, (SELECT count(*) FROM hjjcomment hc WHERE hc.board_seq = hj.seq and hc.status in ('C', 'R')) as comment_cnt
 		FROM	hjjboard hj
 		WHERE	hj.status in ('C', 'R')

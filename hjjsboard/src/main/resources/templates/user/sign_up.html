@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head th:fragment="main-head">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="dev_hjj's portfolio">
+		<meta name="author" content="dev_hjj">
+		<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+		<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+		<th:block layout:fragment="title"></th:block>
+		
+		<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css}" />
+		<link rel="icon" href="/img/devhjj.ico">
+		<link rel="shortcut icon" href="/img/devhjj.ico">
+		<link rel="stylesheet" href="/board_css/creative.min.css"> 
+		<!-- Animate.css -->
+		<link rel="stylesheet" href="/board_css/animate.css">
+		<!-- Icomoon Icon Fonts-->
+		<link rel="stylesheet" href="/board_css/icomoon.css">
+		<link rel="stylesheet" href="/board_css/waves.css">
+		<link rel="stylesheet" href="/board_css/style.css">
+		<th:block layout:fragment="add-css"></th:block>
+		<!-- /.row row-inline-block small-spacing -->
+		<!-- Bootstrap core JavaScript -->
+		<script th:src="@{/js/board_js/jquery.min.js}"></script>
+		<script th:src="@{/js/board_js/bootstrap.bundle.min.js}"></script>
+		<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js}"></script>
+	
+	    <!-- Waves Effect Plugin Js -->
+	    <script th:src="@{/js/board_js/waves.js}"></script>
+	
+	    <!-- Validation Plugin Js -->
+	    <script th:src="@{/js/board_js/jquery.validate.js}"></script>
+	
+	    <!-- Custom Js -->
+	    <script th:src="@{/js/board_js/admin.js}"></script>
+	    <script th:src="@{/js/board_js/jquery.serializeObject.min.js}"></script>
+	    <!--  <script th:src="@{/js/board_js/sign-up.js}"></script> -->
+		<script type="text/javascript">
+		$(document).ready(function(){
+			
+			   $('#div_load_image').hide(); //첫 시작시 로딩바를 숨겨준다.
+		})
+		$(function() {
+			$("form").on("submit", function(e) {
+				var btn = document.querySelector("#btn_back");
+			    btn.addEventListener("click", function (e) {
+			        this.setAttribute("disabled", "disabled");
+			    })
+				e.preventDefault();
+				var $form = $(this).closest("form");
+				var formData = $form.serializeObject();
+				var token = $("meta[name='_csrf']").attr("content");
+			    var header = $("meta[name='_csrf_header']").attr("content");
+				
+				$("section div:eq(0)").append('<div id="d-spin" class="spinner-border">');
+				$("#div_load_image").show();
+				$.ajax({
+					async : true,
+					type : $form.attr("method"),
+					dataType : 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(formData),
+					url : $form.attr("action"),
+					beforeSend : function(xhr){
+						if(token && header) {
+				            xhr.setRequestHeader(header, token);
+				        }
+						///*데이터 확인*/alert(JSON.stringify(formData));
+						$("#div_load_image").show();
+					},
+					success : function(res) {
+						$("#d-spin").remove();
+						$("#div_load_image").hide();
+						if (res.email){
+							$.notify("이메일은 네이버 메일만 가능합니다.");
+							alert("이메일은 네이버 메일만 가능합니다.");
+							$("input[name='email']").focus();
+						} else if (res.password){
+							$.notify("비밀번호는 영문, 숫자, 특수문자 포함 8~15 자리로 해주세요.");
+							alert("비밀번호는 영문, 숫자, 특수문자 포함 8~15 자리로 해주세요.");
+							$("input[name='password']").val("");
+							$("input[name='password']").focus();
+						} else if (res.duplicate) {
+							$.notify("중복된 이메일 입니다.");
+							alert("중복된 이메일 입니다.");
+							$("input[name='email']").val("");
+							$("input[name='email']").focus();
+						} else if (res.success) {
+							$.notify("가입 완료. 메일 인증 후 로그인이 가능합니다.");
+							alert("가입 완료. 메일 인증 후 로그인이 가능합니다.");
+							setTimeout(function() {window.location = document.referrer}, 800);
+						} else {
+							$("#d-spin").hide();
+							$.notify("관리자에게 문의해주세요. (문의: hjjdev@gmail.com)");
+						}
+					},
+					error : function(error) {
+						$("#div_load_image").hide();
+						alert(error.errorMsg);
+					}
+				});
+			});	
+			
+			
+		});
+	</script>
+</head>
+
+<body class="signup-page">
+	<!-- 로딩바 -->
+	<div id="div_load_image" style="position:absolute; top:50%; left:50%;width:0px;height:0px; z-index:9999; background:#f0f0f0; filter:alpha(opacity=50); opacity:alpha*0.5; margin:auto; padding:0; text-align:center">
+	<img src="../img/loading.gif" style="width:100px; height:100px;">
+	</div>
+    <div class="signup-box">
+        <div class="logo">
+            <a href="/board/list.do">HJJ's <b>Board</b></a>
+        </div>
+        <div class="card">
+            <div class="body">
+            <form method="post" th:action="@{/member/signup.do}">
+                <div class="msg">회원가입</div>
+				<div class="input-group">
+					<span class="input-group-addon">
+	                	<i class="fas fa-user"> ID</i>
+					</span>
+					<div class="form-line">
+						<input type="text" name="email" class="form-control" placeholder="Email" autocomplete="off" required/>
+					</div>
+				</div>
+				<div class="input-group">
+					<span class="input-group-addon">
+	                	<i class="fas fa-lock"> PW</i>
+					</span>
+					<div class="form-line">
+						<input type="password" name="password" class="form-control" placeholder="Password" autocomplete="off" required/>
+					</div>
+				</div>
+				<div class="input-group">
+					<span class="input-group-addon">
+	                	<i class="fas fa-user"> Name</i>
+					</span>
+					<div class="form-line">
+						<input type="text" name="name" class="form-control" placeholder="Name" autocomplete="off" required/>
+					</div>
+				</div>
+				<div class="row-xs-8">
+					<input type="hidden" name="phone" class="form-control" placeholder="전화번호(-생략)" autocomplete="off"/>
+					<input type="hidden" name="nickname" class="form-control" placeholder="전화번호(-생략)" autocomplete="off"/>
+				</div>
+				<div class="row-xs-8">
+					<div class="col-xs-8 p-t-5">
+					<button type="submit" class="btn btn-block btn-lg bg-orange waves-effect" id="btn_loginForm">가입</button>
+					</div>
+				</div>
+				<div class="row-xs-8">
+					<div class="col-xs-8 p-t-5">
+					<button type="button" class="btn btn-secondary btn-large form-control" id="btn_back" onclick="history.back()">뒤로가기</button>
+					</div>
+				</div>
+			</form>
+            </div>
+        </div>
+    </div>
+	<!-- Footer -->
+	<footer class="bg-light py-2">
+		<div class="container">
+	    	<div class="small text-center text-muted">Copyright &copy; 2020 - devhjj</div>
+	    </div>
+	</footer>
+</body>
+
+</html>

@@ -1945,7 +1945,7 @@
     color: #fff !important; }
 
 .bg-orange {
-  background-color: #FF9800 !important;
+  background-color: #f4623a !important;
   color: #fff; }
   .bg-orange .content .text,
   .bg-orange .content .number {
@@ -7765,7 +7765,7 @@ fieldset[disabled] .form-control {
 
 /* Login Page ================================== */
 .login-page {
-  background-color: #00BCD4;
+  background-color: #f8f9fa!important;
   padding-left: 0;
   max-width: 360px;
   margin: 5% auto;
@@ -7785,17 +7785,17 @@ fieldset[disabled] .form-control {
       display: block;
       width: 100%;
       text-align: center;
-      color: #fff; }
+      color: #f4623a; }
     .login-page .login-box .logo small {
       display: block;
       width: 100%;
       text-align: center;
-      color: #fff;
+      color: #6c757d;
       margin-top: -5px; }
 
 /* Sign Up Page ================================ */
 .signup-page {
-  background-color: #00BCD4;
+  background-color: #f8f9fa!important;
   padding-left: 0;
   max-width: 360px;
   margin: 5% auto;
@@ -7815,17 +7815,17 @@ fieldset[disabled] .form-control {
       display: block;
       width: 100%;
       text-align: center;
-      color: #fff; }
+      color: #f4623a; }
     .signup-page .signup-box .logo small {
       display: block;
       width: 100%;
       text-align: center;
-      color: #fff;
+      color: #6c757d;
       margin-top: -5px; }
 
 /* Forgot Password Page ======================== */
 .fp-page {
-  background-color: #00BCD4;
+  background-color: #f8f9fa!important;
   padding-left: 0;
   max-width: 360px;
   margin: 5% auto;
@@ -8211,3 +8211,10 @@ html.ie11 .dropdown-menu ul.menu li a {
 
 html.ie11 .bs-searchbox .form-control {
   width: 90%; }
+#Progress_Loading
+{
+ position: absolute;
+ left: 50%;
+ top: 50%;
+ background: #ffffff;
+}

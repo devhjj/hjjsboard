@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head th:fragment="main-head">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="dev_hjj's portfolio">
+		<meta name="author" content="dev_hjj">
+
+		<th:block layout:fragment="title"></th:block>
+		
+		<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css}" />
+		<link rel="icon" href="/img/devhjj.ico">
+		<link rel="shortcut icon" href="/img/devhjj.ico">
+		<link rel="stylesheet" href="/board_css/creative.min.css"> 
+		<!-- Animate.css -->
+		<link rel="stylesheet" href="/board_css/animate.css">
+		<!-- Icomoon Icon Fonts-->
+		<link rel="stylesheet" href="/board_css/icomoon.css">
+		<link rel="stylesheet" href="/board_css/waves.css">
+		<link rel="stylesheet" href="/board_css/style.css">
+		<th:block layout:fragment="add-css"></th:block>
+		<!-- /.row row-inline-block small-spacing -->
+</head>
+
+<body class="login-page">
+    <div class="login-box">
+        <div class="logo">
+            <a href="/board/list.do">HJJ's <b>Board</b></a>
+        </div>
+        <div class="card">
+            <div class="body">
+                <form th:action="@{/login}" id="sign_in" method="POST">
+                	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                	<div class="msg">회원가입 후 내용을 확인할 수 있습니다.</div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fas fa-user"> ID</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" name="id" placeholder="Email" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fas fa-lock"> PW</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="password" class="form-control" name="pw" placeholder="Password" required>
+                        </div>
+                    </div>
+                    <div class="row-xs-8">
+                        <div class="col-xs-8 p-t-5">
+                            <input type="checkbox" name="remember-me" id="remember-me" class="filled-in chk-col-cyan">
+                            <label for="remember-me">Remember Me</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <button class="btn btn-block btn-lg bg-orange waves-effect" type="submit">로그인</button>
+                        </div>
+                        <div class="row-xs-8">
+							<div class="col-xs-8 p-t-5">
+							<button type="button" class="btn btn-secondary btn-large form-control" id="btn_back" onclick="history.back()">뒤로가기</button>
+							</div>
+						</div>
+                    </div>
+                    <div class="row-xs-8">
+		                <div class="col-xs-6" th:if="${param.error}">
+				            Invalid username and password.
+				        </div>
+				        <div class="col-xs-6" th:if="${param.logout}">
+				            You have been logged out.
+				        </div>
+                        <div class="col-xs-6">
+                            <a th:href="@{/member/signup.do}">Register Now!</a>
+                        </div>
+                        <div class="col-xs-6">
+                            <a href="#">Forgot Password?</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+		<script th:src="@{/js/board_js/common.js}"></script>
+		<!-- auto resizing -->
+		<script th:src="@{/js/board_js/autosize.min.js}"></script>
+
+		<!-- Bootstrap core JavaScript -->
+		<script th:src="@{/js/board_js/jquery.min.js}"></script>
+		<script th:src="@{/js/board_js/bootstrap.bundle.min.js}"></script>
+		
+		<!-- Plugin JavaScript -->
+		<script th:src="@{/js/board_js/jquery.easing.min.js}"></script>
+		<script th:src="@{/js/board_js/jquery.magnific-popup.min.js}"></script>
+		
+		<!-- Custom scripts for this template -->
+		<script th:src="@{/js/board_js/creative.min.js}"></script>
+		
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<!-- for comment -->
+		<script th:src="@{/js/board_js/moment.js}"></script>
+		<!-- Validation Plugin Js -->
+    	<script th:src="@{/js/board_js/jquery.validate}"></script>
+    	<!-- Waves Effect Plugin Js -->
+    	<script th:src="@{/js/board_js/waves.js}"></script>
+    	<!-- Custom Js -->
+    	<script th:src="@{/js/board_js/admin.js}"></script>
+		
+	<!-- Footer -->
+	<footer class="bg-light py-2">
+		<div class="container">
+	    	<div class="small text-center text-muted">Copyright &copy; 2020 - devhjj</div>
+	    </div>
+	</footer>
+</body>
+
+</html>
