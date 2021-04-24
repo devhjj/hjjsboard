@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.study.domain.UserDetailsDto;
 import com.study.domain.UserDto;
 
 @Mapper

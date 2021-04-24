@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,8 +18,6 @@ import com.study.mapper.UserMapper;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
     private UserMapper userMapper;

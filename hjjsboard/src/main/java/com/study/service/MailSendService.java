@@ -28,11 +28,13 @@ public class MailSendService {
     private String getAuthCode() {
         Random random = new Random();
         StringBuffer buffer = new StringBuffer();
-        int num = 0;
 
         while(buffer.length() < size) {
-            num = random.nextInt(10);
-            buffer.append(num);
+			if (random.nextBoolean()) {
+				buffer.append((char) ((int) (random.nextInt(26)) + 97));
+			} else {
+				buffer.append((random.nextInt(10)));
+			}
         }
 
         return buffer.toString();

@@ -1,45 +1,52 @@
 ﻿<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!-- http://www.w3.org/1999/xhtml -->
 
 <head th:fragment="main-head">
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="dev_hjj's portfolio">
-		<meta name="author" content="dev_hjj">
-		<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
-		<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="dev_hjj's portfolio">
+<meta name="author" content="dev_hjj">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}" />
+<meta id="_csrf_header" name="_csrf_header"
+	th:content="${_csrf.headerName}" />
 
-		<th:block layout:fragment="title"></th:block>
-		
-		<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css}" />
-		<link rel="icon" href="/img/devhjj.ico">
-		<link rel="shortcut icon" href="/img/devhjj.ico">
-		<link rel="stylesheet" href="/board_css/creative.min.css"> 
-		<!-- Animate.css -->
-		<link rel="stylesheet" href="/board_css/animate.css">
-		<!-- Icomoon Icon Fonts-->
-		<link rel="stylesheet" href="/board_css/icomoon.css">
-		<link rel="stylesheet" href="/board_css/waves.css">
-		<link rel="stylesheet" href="/board_css/style.css">
-		<th:block layout:fragment="add-css"></th:block>
-		<!-- /.row row-inline-block small-spacing -->
-		<!-- Bootstrap core JavaScript -->
-		<script th:src="@{/js/board_js/jquery.min.js}"></script>
-		<script th:src="@{/js/board_js/bootstrap.bundle.min.js}"></script>
-		<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js}"></script>
-	
-	    <!-- Waves Effect Plugin Js -->
-	    <script th:src="@{/js/board_js/waves.js}"></script>
-	
-	    <!-- Validation Plugin Js -->
-	    <script th:src="@{/js/board_js/jquery.validate.js}"></script>
-	
-	    <!-- Custom Js -->
-	    <script th:src="@{/js/board_js/admin.js}"></script>
-	    <script th:src="@{/js/board_js/jquery.serializeObject.min.js}"></script>
-	    <!--  <script th:src="@{/js/board_js/sign-up.js}"></script> -->
-		<script type="text/javascript">
+<th:block layout:fragment="title"></th:block>
+
+<link rel="stylesheet"
+	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css}" />
+<link rel="icon" href="/img/devhjj.ico">
+<link rel="shortcut icon" href="/img/devhjj.ico">
+<link rel="stylesheet" href="/board_css/creative.min.css">
+<!-- Animate.css -->
+<link rel="stylesheet" href="/board_css/animate.css">
+<!-- Icomoon Icon Fonts-->
+<link rel="stylesheet" href="/board_css/icomoon.css">
+<link rel="stylesheet" href="/board_css/waves.css">
+<link rel="stylesheet" href="/board_css/style.css">
+<th:block layout:fragment="add-css"></th:block>
+<!-- /.row row-inline-block small-spacing -->
+<!-- Bootstrap core JavaScript -->
+<script th:src="@{/js/board_js/jquery.min.js}"></script>
+<script th:src="@{/js/board_js/bootstrap.bundle.min.js}"></script>
+<script
+	th:src="@{https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js}"></script>
+
+<!-- Waves Effect Plugin Js -->
+<script th:src="@{/js/board_js/waves.js}"></script>
+
+<!-- Validation Plugin Js -->
+<script th:src="@{/js/board_js/jquery.validate.js}"></script>
+
+<!-- Custom Js -->
+<script th:src="@{/js/board_js/admin.js}"></script>
+<script th:src="@{/js/board_js/jquery.serializeObject.min.js}"></script>
+<!--  <script th:src="@{/js/board_js/sign-up.js}"></script> -->
+<script type="text/javascript">
 		$(document).ready(function(){
 			
 			   $('#div_load_image').hide(); //첫 시작시 로딩바를 숨겨준다.
@@ -112,64 +119,75 @@
 
 <body class="signup-page">
 	<!-- 로딩바 -->
-	<div id="div_load_image" style="position:absolute; top:50%; left:50%;width:0px;height:0px; z-index:9999; background:#f0f0f0; filter:alpha(opacity=50); opacity:alpha*0.5; margin:auto; padding:0; text-align:center">
-	<img src="../img/loading.gif" style="width:100px; height:100px;">
+	<div id="div_load_image"
+		style="position: absolute; top: 50%; left: 50%; width: 0px; height: 0px; z-index: 9999; background: #f0f0f0; filter: alpha(opacity = 50); opacity: alpha*0.5; margin: auto; padding: 0; text-align: center">
+		<img src="../img/loading.gif" style="width: 100px; height: 100px;">
 	</div>
-    <div class="signup-box">
-        <div class="logo">
-            <a href="/board/list.do">HJJ's <b>Board</b></a>
-        </div>
-        <div class="card">
-            <div class="body">
-            <form method="post" th:action="@{/member/signup.do}">
-                <div class="msg">회원가입</div>
-				<div class="input-group">
-					<span class="input-group-addon">
-	                	<i class="fas fa-user"> ID</i>
-					</span>
-					<div class="form-line">
-						<input type="text" name="email" class="form-control" placeholder="Email" autocomplete="off" required/>
+	<div class="signup-box">
+		<div class="logo">
+			<a href="/board/list.do">HJJ's <b>Board</b></a>
+		</div>
+		<div class="card">
+			<div class="body">
+				<form method="post" th:action="@{/member/signup.do}">
+					<div class="msg">회원가입</div>
+					<div class="input-group">
+						<span class="input-group-addon"> <i class="fas fa-user">
+								ID</i>
+						</span>
+						<div class="form-line">
+							<input type="text" name="email" class="form-control"
+								placeholder="Email" autocomplete="off" required />
+						</div>
 					</div>
-				</div>
-				<div class="input-group">
-					<span class="input-group-addon">
-	                	<i class="fas fa-lock"> PW</i>
-					</span>
-					<div class="form-line">
-						<input type="password" name="password" class="form-control" placeholder="Password" autocomplete="off" required/>
+					<div class="input-group">
+						<span class="input-group-addon"> <i class="fas fa-lock">
+								PW</i>
+						</span>
+						<div class="form-line">
+							<input type="password" name="password" class="form-control"
+								placeholder="Password" autocomplete="off" required />
+						</div>
 					</div>
-				</div>
-				<div class="input-group">
-					<span class="input-group-addon">
-	                	<i class="fas fa-user"> Name</i>
-					</span>
-					<div class="form-line">
-						<input type="text" name="name" class="form-control" placeholder="Name" autocomplete="off" required/>
+					<div class="input-group">
+						<span class="input-group-addon"> <i class="fas fa-user">
+								Name</i>
+						</span>
+						<div class="form-line">
+							<input type="text" name="name" class="form-control"
+								placeholder="Name" autocomplete="off" required />
+						</div>
 					</div>
-				</div>
-				<div class="row-xs-8">
-					<input type="hidden" name="phone" class="form-control" placeholder="전화번호(-생략)" autocomplete="off"/>
-					<input type="hidden" name="nickname" class="form-control" placeholder="전화번호(-생략)" autocomplete="off"/>
-				</div>
-				<div class="row-xs-8">
-					<div class="col-xs-8 p-t-5">
-					<button type="submit" class="btn btn-block btn-lg bg-orange waves-effect" id="btn_loginForm">가입</button>
+					<div class="row-xs-8">
+						<input type="hidden" name="phone" class="form-control"
+							placeholder="전화번호(-생략)" autocomplete="off" /> <input
+							type="hidden" name="nickname" class="form-control"
+							placeholder="전화번호(-생략)" autocomplete="off" />
 					</div>
-				</div>
-				<div class="row-xs-8">
-					<div class="col-xs-8 p-t-5">
-					<button type="button" class="btn btn-secondary btn-large form-control" id="btn_back" onclick="history.back()">뒤로가기</button>
+					<div class="row-xs-8">
+						<div class="col-xs-8 p-t-5">
+							<button type="submit"
+								class="btn btn-block btn-lg bg-orange waves-effect"
+								id="btn_loginForm">가입</button>
+						</div>
 					</div>
-				</div>
-			</form>
-            </div>
-        </div>
-    </div>
+					<div class="row-xs-8">
+						<div class="col-xs-8 p-t-5">
+							<button type="button"
+								class="btn btn-secondary btn-large form-control" id="btn_back"
+								onclick="history.back()">뒤로가기</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 	<!-- Footer -->
 	<footer class="bg-light py-2">
 		<div class="container">
-	    	<div class="small text-center text-muted">Copyright &copy; 2020 - devhjj</div>
-	    </div>
+			<div class="small text-center text-muted">Copyright &copy; 2020
+				- devhjj</div>
+		</div>
 	</footer>
 </body>
 
