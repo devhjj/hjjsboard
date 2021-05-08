@@ -56,10 +56,8 @@
 		            </div>
 		        </section>
 				
-				<div class="form-group">
-					<div>
-						<pre id="main_content" style="text-align: left;white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap;  white-space: pre-wrap; word-wrap: break-word;width:100%;border: none;">[[*{content}]]</pre>
-					</div>
+				<div>
+						<div id="main_content" th:utext="*{html}"></div>
 					<figure class="animate-box fadeInUp animated">
 						<img class="img-responsive" th:if="*{img_file != null}" th:src="|/img/board/*{img_file}|" alt="">
 						<img class="img-responsive" th:unless="*{img_file != null}" src="/img/loading.gif" alt="">
@@ -108,7 +106,7 @@
 	
 	
 	<th:block layout:fragment="script">
-		<script th:inline="javascript">
+	<script th:inline="javascript">
 			/*<![CDATA[*/
 			function updateComment(seq, status) {
 
@@ -266,5 +264,5 @@
 			}
 			/*]]>*/
 		</script>
-	</th:block>
+</th:block>
 </html>

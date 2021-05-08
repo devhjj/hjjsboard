@@ -5,6 +5,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
@@ -90,11 +93,14 @@ public class BoardController extends UiUtils {
 		}
 
 		BoardDto boardDto = boardService.getBoardDetail(seq);
+		boardDto.setHtml(markdownToHTML(boardDto.getContent()));
+		
 		if (boardDto == null || "D".equals(boardDto.getStatus())) {
 			// TODO => 없는 게시글이거나, 이미 삭제된 게시글이라는 메시지를 전달하고, 게시글 리스트로 리다이렉트
 			/* return "redirect:/"; */
 			return showMessageWithRedirect("없는 게시글이거나 이미 삭제된 게시글입니다.", "/board/list.do", Method.GET, null, model);
 		}
+		
 		model.addAttribute("board", boardDto);
 		model.addAttribute("clientIP", clientIp());
 
@@ -123,4 +129,14 @@ public class BoardController extends UiUtils {
 		return showMessageWithRedirect("게시글이 삭제되었습니다.", "/board/list.do", Method.GET, pagingParams, model);
 	}
 	
+	private String markdownToHTML(String markdown) {
+        Parser parser = Parser.builder()
+                              .build();
+
+        Node document = parser.parse(markdown);
+        HtmlRenderer renderer = HtmlRenderer.builder()
+                                            .build();
+
+        return renderer.render(document);
+    }
 }

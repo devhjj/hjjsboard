@@ -41,6 +41,11 @@ dependencies {
 	/* for spring security */
 	
 	implementation 'org.springframework.boot:spring-boot-starter-mail' /* for mail */
+	
+	/* for editor */
+	implementation group: 'com.atlassian.commonmark', name: 'commonmark', version: '0.13.1'
+	/* for editor */
+	
 }
 
 test {

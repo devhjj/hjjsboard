@@ -3,7 +3,7 @@
 <mapper namespace="com.study.mapper.UserMapper">
 	
 	<select id="findByEmailAndAuth" parameterType="map" resultType="int">
-		/* findByUserEmailAndUserPw */
+		/* findByEmailAndAuth */
 		SELECT 	count(*)
 		FROM 	hjjuser
 		WHERE	email = #{email}
@@ -46,7 +46,7 @@
 	</update>
 	
 	<update id="updateAuth" parameterType="map">
-		/* updateUserStatus */
+		/* updateAuth */
 		UPDATE 	hjjuser
 		SET 	auth = #{auth}
 		WHERE	email = #{email}

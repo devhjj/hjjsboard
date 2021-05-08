@@ -180,6 +180,8 @@
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<!-- for comment -->
 	<script th:src="@{/js/board_js/moment.js}"></script>
+	<script th:src="@{/js/board_js/simplemde.min.js}"></script> // for markdown editor
+	<script src="https://unpkg.com/@popperjs/core@2"></script> // for markdown editor
 	<script>
 		document.ondragstart = new Function('return false');
 		document.onmousedown=disableclick;

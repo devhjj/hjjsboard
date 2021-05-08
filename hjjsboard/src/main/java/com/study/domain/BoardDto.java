@@ -12,7 +12,15 @@ public class BoardDto extends CommonDto {
 	private String totalView;
 	private String todayView;
 	private String img_file;
+	private String html;
 	
+	
+	public String getHtml() {
+		return html;
+	}
+	public void setHtml(String html) {
+		this.html = html;
+	}
 	public String getImg_file() {
 		return img_file;
 	}
